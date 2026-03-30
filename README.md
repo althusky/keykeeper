@@ -31,23 +31,23 @@ keykeeper user secret user_name add secret_name
 
 * `keykeeper serverkey activate [key]` — passes the key and starts the database
 * `keykeeper serverkey generate` — creates a key for a new database. No actions are performed on the database itself
-~`keykeeper serverkey json` — get a copy of the database in plain JSON format (potentially dangerous command)~~
+~~`keykeeper serverkey json` — get a copy of the database in plain JSON format (potentially dangerous command)~~
 
 
 * `keykeeper user edit [name] --descr [descr] --create --active` — create/edit a user. On creation, returns the user key
-~keykeeper user ls — list users~~
-~keykeeper user lock [name] — lock user~~
-~keykeeper user unlock [name] — unlock user~~
-~keykeeper user remove [name] — delete user~~
-~keykeeper user key name [--change] — return key; if `change`, rotate and return a new one~~
+~~keykeeper user ls — list users~~
+~~keykeeper user lock [name] — lock user~~
+~~keykeeper user unlock [name] — unlock user~~
+~~keykeeper user remove [name] — delete user~~
+~~keykeeper user key name [--change] — return key; if `change`, rotate and return a new one~~
 * `keykeeper user secret [name] [ls|add|remove] [secret_name]` — bind a user to a secret
 * `keykeeper secret edit [name] [value] --descr [descr] --readonly --active --create` — create a new secret
 
-~keykeeper secret ls — list secrets~~
-~keykeeper secret [name] [value] — set secret value~~
-~keykeeper secret lock [name] — lock secret~~
-~keykeeper secret unlock [name] — unlock secret~~
-~keykeeper secret remove [name] — delete secret~~
+~~keykeeper secret ls — list secrets~~
+~~keykeeper secret [name] [value] — set secret value~~
+~~keykeeper secret lock [name] — lock secret~~
+~~keykeeper secret unlock [name] — unlock secret~~
+~~keykeeper secret remove [name] — delete secret~~
 
 ---
 

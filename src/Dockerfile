@@ -17,7 +17,8 @@ COPY server_pack/ server_pack/
 
 COPY keykeeper_protocol.py keykeeper_protocol.py
 COPY server.py server.py
-COPY keykeeper.py keykeeper.py
+COPY keykeeper.py keykeeper
+RUN chmod +x keykeeper
 
 
 ENTRYPOINT ["python3", "server.py"]
