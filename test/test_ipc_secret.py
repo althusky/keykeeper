@@ -1,6 +1,6 @@
 def test_ipc_edit(docker_container):
     res = docker_container.exec_run(
-        'python3 keykeeper.py secret edit my_secret "value" --readonly -ac',
+        'keykeeper secret edit my_secret "value" --readonly -ac',
         stream=True,
     )
     output = "\n".join(map(lambda x: x.decode(), res.output))

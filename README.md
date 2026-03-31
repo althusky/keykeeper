@@ -1,6 +1,6 @@
 ## Lightweight Secret Storage Server
 
-An attempt to implement a secret storage service with a minimal entry threshold for personal use. I understand all limitations and possible vulnerabilities of the service, but it is primarily intended for quick deployment and use in local networks.
+An attempt to implement a secret storage service with a minimal entry threshold for personal use. I understand all the limitations and possible vulnerabilities of the service, but it is primarily intended for quick deployment and use in local networks.
 
 The service opens a port for transferring secrets, but does not have a web interface for management. To work with and manage the server, an SSH connection is required.
 
@@ -8,19 +8,42 @@ The service opens a port for transferring secrets, but does not have a web inter
 
 ## Quick Start
 
-* run with `python3 server.py`
-  To start the server, you need to pass a database dump encryption key. It can be provided directly as a parameter `--db_key="key"` or after startup using the command `keykeeper.py serverkey activate [key]`
+* To start the server, you must provide the database encryption key. It can be provided directly as a parameter `--db_key="key"` or after startup using the command `keykeeper serverkey activate [key]`
 
 * The key is generated with `keykeeper serverkey generate`
 
 * A new key can only be applied to a new database. For it to work, there must be no database dump file; otherwise, the system will try to open the dump with the new key.
 
 ```bash
+cd project/folder
+pip install -e . 
+
 keykeeper serverkey generate
-python3 server.py --db_key="..."  
+keykeeperd --db_key="..."  
+```
+### Manage server
+```bash
 keykeeper user edit user_name --create --active
 keykeeper secret edit secret_name secret_value --create --active
 keykeeper user secret user_name add secret_name
+```
+
+With docker.
+```bash
+docker buildx build -t keykeeper_image --load .
+
+docker run --rm -d \
+-p 8080:7012 \
+--volume /volume/folder:/data \
+--name keykeeper_container \
+--env LOGLEVEL=INFO \
+keykeeper_image --host=0.0.0.0 --port=7012 --db_file=/data/sqlite.bin --db_key="DB_KEY"
+```
+### Manage server in Docker mode
+```bash
+docker exec keykeeper_container keykeeper user edit user_name --create --active
+docker exec keykeeper_container keykeeper secret edit secret_name secret_value --create --active
+docker exec keykeeper_container keykeeper user secret user_name add secret_name
 ```
 
 ---
@@ -30,24 +53,24 @@ keykeeper user secret user_name add secret_name
 * The server does not have a web interface, so commands are executed directly via the host command line or through `docker exec`
 
 * `keykeeper serverkey activate [key]` — passes the key and starts the database
-* `keykeeper serverkey generate` — creates a key for a new database. No actions are performed on the database itself
-~`keykeeper serverkey json` — get a copy of the database in plain JSON format (potentially dangerous command)~~
+* `keykeeper serverkey generate` — creates a key for a new database. This only generates a key and does not modify the database.
+~~`keykeeper serverkey json` — get a copy of the database in plain JSON format (potentially dangerous command)~~
 
 
-* `keykeeper user edit [name] --descr [descr] --create --active` — create/edit a user. On creation, returns the user key
-~keykeeper user ls — list users~~
-~keykeeper user lock [name] — lock user~~
-~keykeeper user unlock [name] — unlock user~~
-~keykeeper user remove [name] — delete user~~
-~keykeeper user key name [--change] — return key; if `change`, rotate and return a new one~~
-* `keykeeper user secret [name] [ls|add|remove] [secret_name]` — bind a user to a secret
-* `keykeeper secret edit [name] [value] --descr [descr] --readonly --active --create` — create a new secret
+* `keykeeper user edit [user-name] --descr [descr] --create --active` — create/edit a user. On creation, returns the user key
+~~keykeeper user ls — list users~~
+~~keykeeper user lock [user-name] — lock user~~
+~~keykeeper user unlock [user-name] — unlock user~~
+~~keykeeper user remove [user-name] — delete user~~
+~~keykeeper user key [user-name] --change — return key; if `change`, rotate and return a new one~~
+* `keykeeper user secret [user-name] [ls|add|remove] [secret-name]` — list the user secrets, bind/unbind a user to a secret 
+* `keykeeper secret edit [user-name] [value] --descr [descr] --readonly --active --create` — create a new secret
 
-~keykeeper secret ls — list secrets~~
-~keykeeper secret [name] [value] — set secret value~~
-~keykeeper secret lock [name] — lock secret~~
-~keykeeper secret unlock [name] — unlock secret~~
-~keykeeper secret remove [name] — delete secret~~
+~~keykeeper secret ls — list secrets~~
+~~keykeeper secret [secret-name] [value] — set secret value~~
+~~keykeeper secret lock [secret-name] — lock secret~~
+~~keykeeper secret unlock [secret-name] — unlock secret~~
+~~keykeeper secret remove [secret-name] — delete secret~~
 
 ---
 
@@ -61,3 +84,9 @@ keykeeper user secret user_name add secret_name
 
 ---
 
+## Makefile 
+
+* `make run` - Starts the server 
+* `make stop` - Stops the server
+* `make connect` - Connects to a running server in terminal mode and allows you to manage the server via the keykeeper command
+* `make test` - Runs tests

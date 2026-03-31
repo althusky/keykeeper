@@ -3,7 +3,7 @@ import base64
 import click
 from Crypto.Random import get_random_bytes
 
-from keykeeper_pack.common import ipc_request
+from keykeeper.keykeeper_pack.common import ipc_request
 
 
 @click.group()

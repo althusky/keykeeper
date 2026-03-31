@@ -1,9 +1,9 @@
 import logging
 from typing import Any, Tuple
 
-import server_pack.secrets as secrets
-import server_pack.users as users
-from keykeeper_protocol import BaseProtocol, ProtocolBrokenError
+import keykeeper.server_pack.secrets as secrets
+import keykeeper.server_pack.users as users
+from keykeeper.keykeeper_protocol import BaseProtocol, ProtocolBrokenError
 
 from .db import DbStore
 

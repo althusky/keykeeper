@@ -1,3 +1,4 @@
+setuptools>=40.8.0
 aiofiles==25.1.0
 aiosqlite==0.22.1
 aiohttp==3.13.3

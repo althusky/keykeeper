@@ -1,8 +1,7 @@
 import logging
 
-from keykeeper_protocol import BaseProtocol
-from server_pack.users import key_gen
-
+from keykeeper.keykeeper_protocol import BaseProtocol
+from keykeeper.server_pack.users import key_gen
 
 def test_init():
     key = key_gen()

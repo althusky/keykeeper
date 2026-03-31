@@ -2,8 +2,8 @@ import logging
 
 import pytest
 
-from keykeeper_protocol import keykeeper
-from server_pack.users import key_gen
+from keykeeper.keykeeper_protocol import keykeeper
+from keykeeper.server_pack.users import key_gen
 
 from .conftest import PORT
 

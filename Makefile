@@ -11,7 +11,7 @@ list:
 run:
 	yes|docker image prune
 	yes|docker container prune
-	cd src; docker buildx build -f $(DOCKER_FILE) -t $(DOCKER_IMAGE) --load .
+	docker buildx build -f $(DOCKER_FILE) -t $(DOCKER_IMAGE) --load .
 	clear
 	mkdir -p tmp
 	docker run --rm -d \
@@ -22,12 +22,15 @@ run:
 	--env TZ=Europe/Berlin \
 	$(DOCKER_IMAGE) --host=0.0.0.0 --port=7012 --db_file=/data/sqlite.bin --db_key="4NHH7D3+0AoSPXb2I6byPg=="
 
+
+connect:
+	docker exec -it $(DOCKER_CONTAINER) /bin/bash
+
+
 stop:
 	docker container stop $(DOCKER_CONTAINER)
 
-keykeeper:
-	docker exec $(DOCKER_CONTAINER) python3 keykeeper.py serverkey generate
 
 test:
-	cd src; pytest -s
+	pytest -s
 	echo -e "\a"

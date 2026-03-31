@@ -9,9 +9,9 @@ import aiohttp
 import click
 from aiohttp import web
 
-from keykeeper_protocol import BaseProtocol
-from server_pack import find_user, ipc_manager
-from server_pack.db import DbStore
+from keykeeper.keykeeper_protocol import BaseProtocol
+from keykeeper.server_pack import find_user, ipc_manager
+from keykeeper.server_pack.db import DbStore
 
 SOCKET_PATH = "/tmp/keykeeper.sock"
 ACCESS_LOG = None
