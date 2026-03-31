@@ -46,8 +46,7 @@ def docker_container():
         detach=True,
         ports={"7012/tcp": PORT},
         entrypoint=[
-            "python3",
-            "server.py",
+            "keykeeperd",
             "--host=0.0.0.0",
             "--port=7012",
             "--db_file=/data/sqlite.bin",
@@ -72,7 +71,7 @@ def docker_container():
 
     # part of the keykeeper serverkey activate <key>
     container.exec_run(
-        f"python3 keykeeper.py serverkey activate {DATABASE_KEY}", stream=True
+        f"keykeeper serverkey activate {DATABASE_KEY}", stream=True
     )
 
     yield container
@@ -86,14 +85,14 @@ def docker_container():
 def server_data(docker_container):
     # users
     response = docker_container.exec_run(
-        "python3 keykeeper.py user edit web_user_1 -ac",
+        "keykeeper user edit web_user_1 -ac",
         stream=True,
     )
     output = "\n".join(map(lambda x: x.decode(), response.output))
     assert "User created:" in output
 
     response = docker_container.exec_run(
-        "python3 keykeeper.py user edit web_user_2 -ac",
+        "keykeeper user edit web_user_2 -ac",
         stream=True,
     )
     output = "\n".join(map(lambda x: x.decode(), response.output))
@@ -103,35 +102,35 @@ def server_data(docker_container):
 
     # secrets
     response = docker_container.exec_run(
-        "python3 keykeeper.py secret edit web_secret_1 value_1 --readonly -ac",
+        "keykeeper secret edit web_secret_1 value_1 --readonly -ac",
         stream=True,
     )
     output = "\n".join(map(lambda x: x.decode(), response.output))
     assert "Secret created:" in output
     response = docker_container.exec_run(
-        "python3 keykeeper.py user secret web_user_2 add web_secret_1",
+        "keykeeper user secret web_user_2 add web_secret_1",
         stream=True,
     )
 
     response = docker_container.exec_run(
-        "python3 keykeeper.py secret edit web_secret_2 value_2 --readonly -ac",
+        "keykeeper secret edit web_secret_2 value_2 --readonly -ac",
         stream=True,
     )
     output = "\n".join(map(lambda x: x.decode(), response.output))
     response = docker_container.exec_run(
-        "python3 keykeeper.py user secret web_user_1 add web_secret_2",
+        "keykeeper user secret web_user_1 add web_secret_2",
         stream=True,
     )
 
     assert "Secret created:" in output
     response = docker_container.exec_run(
-        "python3 keykeeper.py secret edit web_secret_3 value_3 --no-readonly -ac",
+        "keykeeper secret edit web_secret_3 value_3 --no-readonly -ac",
         stream=True,
     )
     output = "\n".join(map(lambda x: x.decode(), response.output))
     assert "Secret created:" in output
     response = docker_container.exec_run(
-        "python3 keykeeper.py user secret web_user_2 add web_secret_3",
+        "keykeeper user secret web_user_2 add web_secret_3",
         stream=True,
     )
 

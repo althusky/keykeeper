@@ -2,7 +2,7 @@ import logging
 
 import pytest
 
-from server_pack.db import DbStore
+from keykeeper.server_pack.db import DbStore
 
 DB_FILE_NAME = "test.bin"
 KEY = "EVSCx9fyxfL+PD4K+nbN9g=="

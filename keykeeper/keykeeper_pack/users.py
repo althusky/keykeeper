@@ -1,6 +1,6 @@
 import click
 
-from keykeeper_pack.common import ipc_request
+from keykeeper.keykeeper_pack.common import ipc_request
 
 
 @click.group()

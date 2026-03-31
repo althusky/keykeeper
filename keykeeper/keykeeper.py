@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import click
 
-from keykeeper_pack.secrets import secret
-from keykeeper_pack.server import serverkey
-from keykeeper_pack.users import user
+from keykeeper.keykeeper_pack.secrets import secret
+from keykeeper.keykeeper_pack.server import serverkey
+from keykeeper.keykeeper_pack.users import user
 
 
 @click.group()

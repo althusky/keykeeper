@@ -1,7 +1,7 @@
 import pytest
 
-from server_pack import ipc_manager
-from server_pack.db import DbStore
+from keykeeper.server_pack import ipc_manager
+from keykeeper.server_pack.db import DbStore
 
 from .conftest import DATABASE_KEY
 

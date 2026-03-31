@@ -11,7 +11,7 @@ list:
 run:
 	yes|docker image prune
 	yes|docker container prune
-	cd src; docker buildx build -f $(DOCKER_FILE) -t $(DOCKER_IMAGE) --load .
+	docker buildx build -f $(DOCKER_FILE) -t $(DOCKER_IMAGE) --load .
 	clear
 	mkdir -p tmp
 	docker run --rm -d \
@@ -31,10 +31,6 @@ stop:
 	docker container stop $(DOCKER_CONTAINER)
 
 
-keykeeper:
-	docker exec $(DOCKER_CONTAINER) python3 keykeeper.py serverkey generate
-
-
 test:
-	cd src; pytest -s
+	pytest -s
 	echo -e "\a"
