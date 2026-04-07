@@ -34,6 +34,8 @@ async def ipc_manager(
                 request["create"],
                 request["active"],
             )
+        case {"user": value} if value == "ls":
+            return await users.ls(db_store)
         case {"user": value} if value == "secret":
             return await users.secret_user(
                 db_store,
@@ -51,6 +53,8 @@ async def ipc_manager(
                 request["readonly"],
                 request["create"],
             )
+        case {"secret": value} if value == "ls":
+            return await secrets.ls(db_store)
 
     return {"result": "Unknown command"}
 

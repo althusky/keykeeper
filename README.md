@@ -54,23 +54,23 @@ docker exec keykeeper_container keykeeper user secret user_name add secret_name
 
 * `keykeeper serverkey activate [key]` — passes the key and starts the database
 * `keykeeper serverkey generate` — creates a key for a new database. This only generates a key and does not modify the database.
-~~`keykeeper serverkey json` — get a copy of the database in plain JSON format (potentially dangerous command)~~
+* ~~`keykeeper serverkey [db_key] [dump|load]` — get a copy of the database in plain JSON format (potentially dangerous command)~~
 
 
 * `keykeeper user edit [user-name] --descr [descr] --create --active` — create/edit a user. On creation, returns the user key
-~~keykeeper user ls — list users~~
-~~keykeeper user lock [user-name] — lock user~~
-~~keykeeper user unlock [user-name] — unlock user~~
-~~keykeeper user remove [user-name] — delete user~~
-~~keykeeper user key [user-name] --change — return key; if `change`, rotate and return a new one~~
+* `keykeeper user ls` — list users
+* ~~keykeeper user lock [user-name] — lock user~~
+* ~~keykeeper user unlock [user-name] — unlock user~~
+* ~~keykeeper user remove [user-name] — delete user~~
+* ~~keykeeper user key [user-name] --change — return key; if `change`, rotate and return a new one~~
 * `keykeeper user secret [user-name] [ls|add|remove] [secret-name]` — list the user secrets, bind/unbind a user to a secret 
 * `keykeeper secret edit [user-name] [value] --descr [descr] --readonly --active --create` — create a new secret
 
-~~keykeeper secret ls — list secrets~~
-~~keykeeper secret [secret-name] [value] — set secret value~~
-~~keykeeper secret lock [secret-name] — lock secret~~
-~~keykeeper secret unlock [secret-name] — unlock secret~~
-~~keykeeper secret remove [secret-name] — delete secret~~
+* `keykeeper secret ls` — list secrets
+* ~~keykeeper secret [secret-name] [value] — set secret value~~
+* ~~keykeeper secret lock [secret-name] — lock secret~~
+* ~~keykeeper secret unlock [secret-name] — unlock secret~~
+* ~~keykeeper secret remove [secret-name] — delete secret~~
 
 ---
 

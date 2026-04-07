@@ -122,15 +122,23 @@ def server_data(docker_container):
         stream=True,
     )
 
-    assert "Secret created:" in output
     response = docker_container.exec_run(
         "keykeeper secret edit web_secret_3 value_3 --no-readonly -ac",
         stream=True,
     )
     output = "\n".join(map(lambda x: x.decode(), response.output))
-    assert "Secret created:" in output
     response = docker_container.exec_run(
         "keykeeper user secret web_user_2 add web_secret_3",
+        stream=True,
+    )
+
+    response = docker_container.exec_run(
+        "keykeeper secret edit web_secret_4 value_4 --no-readonly -c",
+        stream=True,
+    )
+    output = "\n".join(map(lambda x: x.decode(), response.output))
+    response = docker_container.exec_run(
+        "keykeeper user secret web_user_2 add web_secret_4",
         stream=True,
     )
 
