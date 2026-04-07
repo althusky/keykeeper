@@ -139,8 +139,13 @@ async def test_list(prepare_db):
             "secret_name": None,
         },
     )
-    assert response["result"] == "ok"
-    assert len(response["lines"]) == 2
+    assert response == {
+        "result": "ok",
+        "lines": [
+            ("secret_0", 1, 1, "Description for 0"),
+            ("secret_1", 1, 1, "Description for 1"),
+        ],
+    }
 
 
 @pytest.mark.asyncio

@@ -82,3 +82,22 @@ async def edit_secret(
         return {"result": "ok", "msg": f"Secret: {name} record updated"}
 
     return {"result": "Unknown error"}
+
+
+async def ls(db_store: DbStore):
+    """Return secrets ordered by active status and name.
+
+    Args:
+        db_store: Database store with an open connection.
+
+    Returns:
+        A dictionary with the operation result and rows with secrets.
+    """
+
+    curs = await db_store.conn.execute(
+        "SELECT name, active, readonly, descr "
+        "FROM secret ORDER BY active DESC, name;"
+    )
+    rows = await curs.fetchall()
+    await curs.close()
+    return {"result": "ok", "lines": rows}

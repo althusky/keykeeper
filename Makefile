@@ -23,11 +23,13 @@ run:
 	$(DOCKER_IMAGE) --host=0.0.0.0 --port=7012 --db_file=/data/sqlite.bin --db_key="4NHH7D3+0AoSPXb2I6byPg=="
 
 
-connect:
-	docker exec -it $(DOCKER_CONTAINER) /bin/bash
-
-
 stop:
+	docker container stop $(DOCKER_CONTAINER)
+
+
+terminal:
+	make run
+	- docker exec -it $(DOCKER_CONTAINER) /bin/bash
 	docker container stop $(DOCKER_CONTAINER)
 
 

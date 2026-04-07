@@ -12,14 +12,14 @@ from .conftest import PORT
 async def test_get_secret(server_data, docker_container):
 
     with pytest.raises(ConnectionError) as exinfo:
-        response = keykeeper(
+        _ = keykeeper(
             f"http://127.0.0.1:{PORT}", server_data, "web_secret_fake"
         )
     assert "unknown secret" in str(exinfo.value)
 
     with pytest.raises(ConnectionError) as exinfo:
         key = key_gen()
-        response = keykeeper(f"http://127.0.0.1:{PORT}", key, "web_secret_1")
+        _ = keykeeper(f"http://127.0.0.1:{PORT}", key, "web_secret_1")
     assert "did not find the user" in str(exinfo.value)
 
     response = keykeeper(
@@ -37,7 +37,7 @@ async def test_post_secret(server_data, docker_container):
     assert response == "value_1"
 
     with pytest.raises(ConnectionError) as exinfo:
-        response = keykeeper(
+        _ = keykeeper(
             f"http://127.0.0.1:{PORT}",
             server_data,
             "web_secret_1",
@@ -59,3 +59,15 @@ async def test_post_secret(server_data, docker_container):
         f"http://127.0.0.1:{PORT}", server_data, "web_secret_3"
     )
     assert response == "value_new"
+
+
+@pytest.mark.asyncio
+async def test_lock_secret(server_data, docker_container):
+
+    with pytest.raises(ConnectionError) as exinfo:
+        _ = keykeeper(
+            f"http://127.0.0.1:{PORT}",
+            server_data,
+            "web_secret_4",
+        )
+    assert "unknown secret" in str(exinfo.value)
