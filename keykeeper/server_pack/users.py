@@ -106,7 +106,7 @@ async def secret_user(
     # ls
     if action == "ls":
         curs = await db_store.conn.execute(
-            "SELECT s.name, s.descr, s.active, s.readonly "
+            "SELECT s.name, s.active, s.readonly, s.descr "
             "FROM secret as s, user_secret as us "
             "WHERE s.id = us.id_secret "
             "   AND us.id_user = :id_user;",
@@ -162,3 +162,20 @@ async def secret_user(
         return {"result": "ok"}
 
     return {"result": "Unknown action"}
+
+
+async def ls(db_store: DbStore):
+    """Return users ordered by active status and name.
+
+    Args:
+        db_store: Database store with an open connection.
+
+    Returns:
+        A dictionary with the operation result and rows with users.
+    """
+    curs = await db_store.conn.execute(
+        "SELECT name, active, descr FROM user ORDER BY active DESC, name;"
+    )
+    rows = await curs.fetchall()
+    await curs.close()
+    return {"result": "ok", "lines": rows}

@@ -101,6 +101,7 @@ async def post_secret(request):
         "FROM user AS u, secret AS s, user_secret AS us "
         "WHERE u.id = us.id_user "
         "   AND s.id = us.id_secret "
+        "   AND s.active = 1 "
         "   AND u.name = :user_name "
         "   AND s.name = :secret_name;",
         {"user_name": user_name, "secret_name": request["name"]},

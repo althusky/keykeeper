@@ -62,3 +62,29 @@ def edit(
         click.secho(response["msg"], fg="green")
     else:
         click.secho(response["result"], fg="red")
+
+
+@secret.command("ls", short_help="Show a list of secrets")
+def ls():
+    """Show a list of secrets and their status."""
+
+    response = ipc_request({"secret": "ls"})
+
+    if response["result"] == "ok" and "lines" in response:
+        if not response["lines"]:
+            click.secho("< empty >", fg="green")
+            return
+        name_max = max(map(lambda x: len(x[0]), response["lines"]))
+        for line in response["lines"]:
+            click.echo(f"{line[0]:<{name_max}} |", nl=False)
+            if line[1]:
+                click.secho(" active ", fg="green", nl=False)
+            else:
+                click.secho(" lock   ", fg="red", nl=False)
+            if line[2]:
+                click.secho("| ro |", fg="green", nl=False)
+            else:
+                click.secho("|    |", fg="red", nl=False)
+            click.echo(f" {line[3]}")
+    else:
+        click.secho(response["result"], fg="red")
