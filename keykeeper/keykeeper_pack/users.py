@@ -97,7 +97,6 @@ def secret(name: str, action: str, secret_name: None | str = None):
 
 @user.command("ls", short_help="Shows a list of users")
 def ls():
-    """Show a list of users and their status."""
 
     response = ipc_request({"user": "ls"})
 
@@ -113,5 +112,55 @@ def ls():
             else:
                 click.secho(" lock   ", fg="red", nl=False)
             click.echo(f"| {line[2]}")
+    else:
+        click.secho(response["result"], fg="red")
+
+
+@user.command("lock", short_help="Blocks the user")
+@click.argument("name", type=str)
+def lock(name: str):
+    """
+    NAME - user name
+    \f
+    """
+    response = ipc_request({"user": "lock", "name": name})
+    if response["result"] == "ok":
+        click.secho(response["msg"], fg="green")
+    else:
+        click.secho(response["result"], fg="red")
+
+
+@user.command("unlock", short_help="Unlocks the user")
+@click.argument("name", type=str)
+def unlock(name: str):
+    """
+    NAME - user name
+    \f
+    """
+    response = ipc_request({"user": "unlock", "name": name})
+    if response["result"] == "ok":
+        click.secho(response["msg"], fg="green")
+    else:
+        click.secho(response["result"], fg="red")
+
+
+@user.command("key", short_help="Obtain or reissue a user key")
+@click.argument("name", type=str)
+@click.option(
+    "--change",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="Reissue a user key",
+)
+def key(name: str, change: bool = False):
+    """
+    NAME - user name
+    \f
+    """
+    response = ipc_request({"user": "key", "name": name, "change": change})
+    if response["result"] == "ok":
+        click.secho(f"{response['msg']} : ", fg="green", nl=False)
+        click.secho(response["key"], fg="yellow")
     else:
         click.secho(response["result"], fg="red")

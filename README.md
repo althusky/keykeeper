@@ -59,10 +59,10 @@ docker exec keykeeper_container keykeeper user secret user_name add secret_name
 
 * `keykeeper user edit [user-name] --descr [descr] --create --active` — create/edit a user. On creation, returns the user key
 * `keykeeper user ls` — list users
-* ~~keykeeper user lock [user-name] — lock user~~
-* ~~keykeeper user unlock [user-name] — unlock user~~
+* `keykeeper user lock [user-name]` — lock user
+* `keykeeper user unlock [user-name]` — unlock user
 * ~~keykeeper user remove [user-name] — delete user~~
-* ~~keykeeper user key [user-name] --change — return key; if `change`, rotate and return a new one~~
+* `keykeeper user key [user-name] --change` — return key; if `change`, rotate and return a new one
 * `keykeeper user secret [user-name] [ls|add|remove] [secret-name]` — list the user secrets, bind/unbind a user to a secret 
 * `keykeeper secret edit [user-name] [value] --descr [descr] --readonly --active --create` — create a new secret
 
