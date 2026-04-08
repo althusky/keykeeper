@@ -1,3 +1,5 @@
+from typing import Any
+
 from .db import DbStore
 
 
@@ -9,7 +11,7 @@ async def edit_secret(
     active: bool,
     readonly: bool,
     create: bool,
-):
+) -> dict[str, Any]:
     """Create or update a secret record in the database.
 
     The function first checks whether a secret with the given name
@@ -84,7 +86,7 @@ async def edit_secret(
     return {"result": "Unknown error"}
 
 
-async def ls(db_store: DbStore):
+async def ls(db_store: DbStore) -> dict[str, Any]:
     """Return secrets ordered by active status and name.
 
     Args:

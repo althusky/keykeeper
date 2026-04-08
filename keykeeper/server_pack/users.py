@@ -19,7 +19,7 @@ def key_gen() -> str:
 
 async def edit_user(
     db_store: DbStore, name: str, descr: str, create: bool, active: bool
-):
+) -> dict[str, Any]:
     """Create or update a user record.
 
     The function looks up a user by name and then either creates a new
@@ -164,7 +164,104 @@ async def secret_user(
     return {"result": "Unknown action"}
 
 
-async def ls(db_store: DbStore):
+async def lock(db_store: DbStore, name: str) -> dict[str, Any]:
+    """Block a user account by name.
+
+    Query the database for the user with the given name and, if the
+    user exists and is active, mark the account as inactive.
+
+    Args:
+        db_store: Database store instance used to access the
+            connection.
+        name: User name to block.
+
+    Returns:
+        A dictionary with the operation result.
+    """
+
+    curs = await db_store.conn.execute(
+        "SELECT active FROM user WHERE name = :name", {"name": name}
+    )
+    row_user = await curs.fetchone()
+    await curs.close()
+
+    if not row_user:
+        return {"result": f"Unknown user name: {name}"}
+
+    if not row_user[0]:
+        return {"result": f"The user: {name} has already been locked"}
+
+    curs = await db_store.conn.execute(
+        "UPDATE user SET active = 0 WHERE name = :name", {"name": name}
+    )
+    await curs.close()
+    await db_store.commit()
+
+    return {"result": "ok", "msg": f"User: {name} has been blocked."}
+
+
+async def unlock(db_store: DbStore, name: str) -> dict[str, Any]:
+    """Unlock a user account by name.
+
+    Query the database for the user with the given name and, if the
+    user exists and is active, mark the account as inactive.
+
+    Args:
+        db_store: Database store instance used to access the
+            connection.
+        name: User name to block.
+
+    Returns:
+        A dictionary with the operation result.
+    """
+
+    curs = await db_store.conn.execute(
+        "SELECT active FROM user WHERE name = :name", {"name": name}
+    )
+    row_user = await curs.fetchone()
+    await curs.close()
+
+    if not row_user:
+        return {"result": f"Unknown user name: {name}"}
+
+    if row_user[0]:
+        return {"result": f"The user: {name} has already been activated"}
+
+    curs = await db_store.conn.execute(
+        "UPDATE user SET active = 1 WHERE name = :name", {"name": name}
+    )
+    await curs.close()
+    await db_store.commit()
+
+    return {"result": "ok", "msg": f"User: {name} has been activated."}
+
+
+async def key(
+    db_store: DbStore, name: str, change: bool = False
+) -> dict[str, Any]:
+    curs = await db_store.conn.execute(
+        "SELECT key FROM user WHERE name = :name", {"name": name}
+    )
+    row_user = await curs.fetchone()
+    await curs.close()
+
+    if not row_user:
+        return {"result": f"Unknown user name: {name}"}
+
+    if change:
+        key = key_gen()
+        curs = await db_store.conn.execute(
+            "UPDATE user SET key = :key WHERE name = :name",
+            {"key": key, "name": name}
+        )
+        await curs.close()
+        await db_store.commit()
+        return {"result": "ok", "key": key, "msg": "New key"}
+
+    return {"result": "ok", "key": row_user[0], "msg": "Key"}
+
+
+async def ls(db_store: DbStore) -> dict[str, Any]:
     """Return users ordered by active status and name.
 
     Args:

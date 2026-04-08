@@ -36,12 +36,20 @@ async def ipc_manager(
             )
         case {"user": value} if value == "ls":
             return await users.ls(db_store)
+        case {"user": value} if value == "lock":
+            return await users.lock(db_store, request["name"])
+        case {"user": value} if value == "unlock":
+            return await users.unlock(db_store, request["name"])
+        case {"user": value} if value == "key":
+            return await users.key(
+                db_store, request["name"], request["change"]
+            )
         case {"user": value} if value == "secret":
             return await users.secret_user(
                 db_store,
                 request["name"],
                 request["action"],
-                request["secret_name"]
+                request["secret_name"],
             )
         case {"secret": value} if value == "edit":
             return await secrets.edit_secret(
