@@ -164,6 +164,39 @@ async def secret_user(
     return {"result": "Unknown action"}
 
 
+async def remove(db_store, name: str):
+    """Remove a user and related secrets from the database.
+
+    Args:
+        db_store: Database store object with an active connection.
+        name: User name to remove.
+
+    Returns:
+        A dictionary with the operation result.
+    """
+    curs = await db_store.conn.execute(
+        "SELECT id FROM user WHERE name = :name", {"name": name}
+    )
+    row_user = await curs.fetchone()
+    await curs.close()
+
+    if not row_user:
+        return {"result": f"Unknown user name: {name}"}
+    id_user = row_user[0]
+
+    curs = await db_store.conn.execute(
+        "DELETE FROM user_secret WHERE id_user = :id_user",
+        {"id_user": id_user},
+    )
+    await curs.close()
+    curs = await db_store.conn.execute(
+        "DELETE FROM user WHERE id = :id_user", {"id_user": id_user}
+    )
+    await curs.close()
+
+    return {"result": "ok", "msg": f"User: {name} deleted"}
+
+
 async def lock(db_store: DbStore, name: str) -> dict[str, Any]:
     """Block a user account by name.
 
@@ -252,7 +285,7 @@ async def key(
         key = key_gen()
         curs = await db_store.conn.execute(
             "UPDATE user SET key = :key WHERE name = :name",
-            {"key": key, "name": name}
+            {"key": key, "name": name},
         )
         await curs.close()
         await db_store.commit()
@@ -275,4 +308,14 @@ async def ls(db_store: DbStore) -> dict[str, Any]:
     )
     rows = await curs.fetchall()
     await curs.close()
+    return {"result": "ok", "lines": rows}
+    await curs.close()
+    return {"result": "ok", "lines": rows}
+    await curs.close()
+    return {"result": "ok", "lines": rows}
+    await curs.close()
+    return {"result": "ok", "lines": rows}
+    return {"result": "ok", "lines": rows}
+    return {"result": "ok", "lines": rows}
+    return {"result": "ok", "lines": rows}
     return {"result": "ok", "lines": rows}

@@ -52,6 +52,31 @@ def edit(name: str, descr: str, create: bool, active: bool):
         click.secho(response["result"], fg="red")
 
 
+@user.command("remove", short_help="")
+@click.argument("name", type=str)
+@click.option("--yes", is_flag=True, help="")
+def remove(name: str, yes: bool = False):
+    """
+    NAME - user name
+    \f
+    """
+    if not yes:
+        click.secho(f"User: {name} will be deleted!!", fg="red")
+        if not click.confirm("Continue ?", abort=False, show_default=False):
+            click.secho(f"Deletion of user: {name} canceled.", fg="green")
+            return
+    response = ipc_request(
+        {
+            "user": "remove",
+            "name": name,
+        }
+    )
+    if response["result"] == "ok":
+        click.secho(response["msg"], fg="green")
+    else:
+        click.secho(response["result"], fg="red")
+
+
 @user.command("secret", short_help="Manage key attached to user")
 @click.argument("name", type=str)
 @click.argument("action", type=click.Choice(["ls", "add", "remove"]))
