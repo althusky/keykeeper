@@ -34,6 +34,8 @@ async def ipc_manager(
                 request["create"],
                 request["active"],
             )
+        case {"user": value} if value == "remove":
+            return await users.remove(db_store, request["name"])
         case {"user": value} if value == "ls":
             return await users.ls(db_store)
         case {"user": value} if value == "lock":
