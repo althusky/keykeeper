@@ -67,10 +67,10 @@ docker exec keykeeper_container keykeeper user secret user_name add secret_name
 * `keykeeper secret edit [user-name] [value] --descr [descr] --readonly --active --create` — create a new secret
 
 * `keykeeper secret ls` — list secrets
-* ~~keykeeper secret [secret-name] [value] — set secret value~~
+* `keykeeper secret value [secret-name] [value]`— get or set (if value passed) secret value
 * `keykeeper secret lock [secret-name]` — lock secret
 * `keykeeper secret unlock [secret-name]` — unlock secret
-* ~~keykeeper secret remove [secret-name] — delete secret~~
+* ~~`keykeeper secret remove [secret-name]` — delete secret~~
 
 ---
 

@@ -64,7 +64,29 @@ def edit(
         click.secho(response["result"], fg="red")
 
 
-@secret.command("lock", short_help="Blocks the user")
+@secret.command("value", short_help="Blocks the user")
+@click.argument("name", type=str)
+@click.argument("value", type=str, default=None, required=False)
+def value(name: str, value: None | str = None):
+    """
+    NAME - secret name
+    [VALUE] - secret value
+    \f
+    """
+    request = {"secret": "value", "name": name}
+    if value is not None:
+        request["value"] = value
+
+    response = ipc_request(request)
+
+    if response["result"] == "ok":
+        click.secho(response["msg"], fg="green", nl=False)
+        click.secho(f": {response['value']}", fg="yellow")
+    else:
+        click.secho(response["result"], fg="red")
+
+
+@secret.command("lock", short_help="Blocks the secret")
 @click.argument("name", type=str)
 def lock(name: str):
     """
@@ -78,7 +100,7 @@ def lock(name: str):
         click.secho(response["result"], fg="red")
 
 
-@secret.command("unlock", short_help="Unlocks the user")
+@secret.command("unlock", short_help="Unlocks the secret")
 @click.argument("name", type=str)
 def unlock(name: str):
     """
