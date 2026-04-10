@@ -86,6 +86,26 @@ async def edit_secret(
     return {"result": "Unknown error"}
 
 
+async def value(db_store: DbStore, name: str, value: str) -> dict[str, Any]:
+    curs = await db_store.conn.execute(
+        "SELECT value FROM secret WHERE name = :name", {"name": name}
+    )
+    row_secret = await curs.fetchone()
+    await curs.close()
+
+    if not row_secret:
+        return {"result": f"Unknown secret name: {name}"}
+
+    if value is not None:
+        curs = await db_store.conn.execute(
+            "UPDATE secret SET value = :value WHERE name = :name",
+            {"value": value, "name": name},
+        )
+        return {"result": "ok", "msg": "Set secret value", "value": value}
+
+    return {"result": "ok", "msg": "Get secret value", "value": row_secret[0]}
+
+
 async def lock(db_store: DbStore, name: str) -> dict[str, Any]:
     """Block a secret by name.
 
