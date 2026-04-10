@@ -63,6 +63,10 @@ async def ipc_manager(
                 request["readonly"],
                 request["create"],
             )
+        case {"secret": value} if value == "lock":
+            return await secrets.lock(db_store, request["name"])
+        case {"secret": value} if value == "unlock":
+            return await secrets.unlock(db_store, request["name"])
         case {"secret": value} if value == "ls":
             return await secrets.ls(db_store)
 

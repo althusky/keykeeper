@@ -242,7 +242,7 @@ async def unlock(db_store: DbStore, name: str) -> dict[str, Any]:
     Args:
         db_store: Database store instance used to access the
             connection.
-        name: User name to block.
+        name: User name to unlock.
 
     Returns:
         A dictionary with the operation result.
@@ -308,14 +308,4 @@ async def ls(db_store: DbStore) -> dict[str, Any]:
     )
     rows = await curs.fetchall()
     await curs.close()
-    return {"result": "ok", "lines": rows}
-    await curs.close()
-    return {"result": "ok", "lines": rows}
-    await curs.close()
-    return {"result": "ok", "lines": rows}
-    await curs.close()
-    return {"result": "ok", "lines": rows}
-    return {"result": "ok", "lines": rows}
-    return {"result": "ok", "lines": rows}
-    return {"result": "ok", "lines": rows}
     return {"result": "ok", "lines": rows}

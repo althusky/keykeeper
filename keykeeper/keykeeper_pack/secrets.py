@@ -64,6 +64,34 @@ def edit(
         click.secho(response["result"], fg="red")
 
 
+@secret.command("lock", short_help="Blocks the user")
+@click.argument("name", type=str)
+def lock(name: str):
+    """
+    NAME - secret name
+    \f
+    """
+    response = ipc_request({"secret": "lock", "name": name})
+    if response["result"] == "ok":
+        click.secho(response["msg"], fg="green")
+    else:
+        click.secho(response["result"], fg="red")
+
+
+@secret.command("unlock", short_help="Unlocks the user")
+@click.argument("name", type=str)
+def unlock(name: str):
+    """
+    NAME - secret name
+    \f
+    """
+    response = ipc_request({"secret": "unlock", "name": name})
+    if response["result"] == "ok":
+        click.secho(response["msg"], fg="green")
+    else:
+        click.secho(response["result"], fg="red")
+
+
 @secret.command("ls", short_help="Show a list of secrets")
 def ls():
     """Show a list of secrets and their status."""

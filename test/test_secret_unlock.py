@@ -7,7 +7,7 @@ from .conftest import DATABASE_KEY
 
 
 @pytest.mark.asyncio
-async def test_user_unlock(tmp_path):
+async def test_secert_unlock(tmp_path):
 
     db_store = DbStore(tmp_path / "test.bin")
     await db_store.load(DATABASE_KEY)
@@ -15,9 +15,11 @@ async def test_user_unlock(tmp_path):
     await ipc_manager(
         db_store,
         {
-            "user": "edit",
+            "secret": "edit",
             "name": "active",
+            "value": "active",
             "descr": "",
+            "readonly": False,
             "create": True,
             "active": True,
         },
@@ -25,26 +27,34 @@ async def test_user_unlock(tmp_path):
     await ipc_manager(
         db_store,
         {
-            "user": "edit",
+            "secret": "edit",
             "name": "lock",
+            "value": "lock",
             "descr": "",
+            "readonly": False,
             "create": True,
             "active": False,
         },
     )
 
-    response = await ipc_manager(db_store, {"user": "unlock", "name": "fake"})
-    assert response == {"result": "Unknown user name: fake"}
+    response = await ipc_manager(
+        db_store, {"secret": "unlock", "name": "fake"}
+    )
+    assert response == {"result": "Unknown secret name: fake"}
 
     response = await ipc_manager(
-        db_store, {"user": "unlock", "name": "active"}
+        db_store, {"secret": "unlock", "name": "active"}
     )
-    assert response == {"result": "The user: active has already been activated"}
+    assert response == {
+        "result": "The secret: active has already been activated"
+    }
 
-    response = await ipc_manager(db_store, {"user": "unlock", "name": "lock"})
+    response = await ipc_manager(
+        db_store, {"secret": "unlock", "name": "lock"}
+    )
     assert response == {
         "result": "ok",
-        "msg": "User: lock has been activated.",
+        "msg": "Secret: lock has been activated.",
     }
 
     await db_store.close()

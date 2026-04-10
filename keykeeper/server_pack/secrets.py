@@ -86,6 +86,78 @@ async def edit_secret(
     return {"result": "Unknown error"}
 
 
+async def lock(db_store: DbStore, name: str) -> dict[str, Any]:
+    """Block a secret by name.
+
+    Query the database for the user with the given name and, if the
+    user exists and is active, mark the account as inactive.
+
+    Args:
+        db_store: Database store instance used to access the
+            connection.
+        name: Secret name to block.
+
+    Returns:
+        A dictionary with the operation result.
+    """
+
+    curs = await db_store.conn.execute(
+        "SELECT active FROM secret WHERE name = :name", {"name": name}
+    )
+    row_secret = await curs.fetchone()
+    await curs.close()
+
+    if not row_secret:
+        return {"result": f"Unknown secret name: {name}"}
+
+    if not row_secret[0]:
+        return {"result": f"The secret: {name} has already been locked"}
+
+    curs = await db_store.conn.execute(
+        "UPDATE secret SET active = 0 WHERE name = :name", {"name": name}
+    )
+    await curs.close()
+    await db_store.commit()
+
+    return {"result": "ok", "msg": f"Secret: {name} has been blocked."}
+
+
+async def unlock(db_store: DbStore, name: str) -> dict[str, Any]:
+    """Unlock a secret account by name.
+
+    Query the database for the user with the given name and, if the
+    user exists and is active, mark the account as inactive.
+
+    Args:
+        db_store: Database store instance used to access the
+            connection.
+        name: Secret name to unlock.
+
+    Returns:
+        A dictionary with the operation result.
+    """
+
+    curs = await db_store.conn.execute(
+        "SELECT active FROM secret WHERE name = :name", {"name": name}
+    )
+    row_secret = await curs.fetchone()
+    await curs.close()
+
+    if not row_secret:
+        return {"result": f"Unknown secret name: {name}"}
+
+    if row_secret[0]:
+        return {"result": f"The secret: {name} has already been activated"}
+
+    curs = await db_store.conn.execute(
+        "UPDATE secret SET active = 1 WHERE name = :name", {"name": name}
+    )
+    await curs.close()
+    await db_store.commit()
+
+    return {"result": "ok", "msg": f"Secret: {name} has been activated."}
+
+
 async def ls(db_store: DbStore) -> dict[str, Any]:
     """Return secrets ordered by active status and name.
 
