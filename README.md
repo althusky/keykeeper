@@ -68,8 +68,8 @@ docker exec keykeeper_container keykeeper user secret user_name add secret_name
 
 * `keykeeper secret ls` — list secrets
 * ~~keykeeper secret [secret-name] [value] — set secret value~~
-* ~~keykeeper secret lock [secret-name] — lock secret~~
-* ~~keykeeper secret unlock [secret-name] — unlock secret~~
+* `keykeeper secret lock [secret-name]` — lock secret
+* `keykeeper secret unlock [secret-name]` — unlock secret
 * ~~keykeeper secret remove [secret-name] — delete secret~~
 
 ---

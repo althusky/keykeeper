@@ -7,7 +7,7 @@ from .conftest import DATABASE_KEY
 
 
 @pytest.mark.asyncio
-async def test_ls(tmp_path):
+async def test_user_lock(tmp_path):
 
     db_store = DbStore(tmp_path / "test.bin")
     await db_store.load(DATABASE_KEY)
