@@ -52,9 +52,9 @@ def edit(name: str, descr: str, create: bool, active: bool):
         click.secho(response["result"], fg="red")
 
 
-@user.command("remove", short_help="")
+@user.command("remove", short_help="Delete user")
 @click.argument("name", type=str)
-@click.option("--yes", is_flag=True, help="")
+@click.option("--yes", is_flag=True, help="Delete without confirmation")
 def remove(name: str, yes: bool = False):
     """
     NAME - user name

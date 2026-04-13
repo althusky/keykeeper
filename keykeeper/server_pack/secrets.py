@@ -86,7 +86,54 @@ async def edit_secret(
     return {"result": "Unknown error"}
 
 
+async def remove(db_store, name: str):
+    """Remove a secret and it relations to user from the database.
+
+    Args:
+        db_store: Database store object with an active connection.
+        name: Secret name to remove.
+
+    Returns:
+        A dictionary with the operation result.
+    """
+    curs = await db_store.conn.execute(
+        "SELECT id FROM secret WHERE name = :name", {"name": name}
+    )
+    row_secret = await curs.fetchone()
+    await curs.close()
+
+    if not row_secret:
+        return {"result": f"Unknown secret name: {name}"}
+    id_secret = row_secret[0]
+
+    curs = await db_store.conn.execute(
+        "DELETE FROM user_secret WHERE id_secret = :id_secret",
+        {"id_secret": id_secret},
+    )
+    await curs.close()
+    curs = await db_store.conn.execute(
+        "DELETE FROM secret WHERE id = :id_secret", {"id_secret": id_secret}
+    )
+    await curs.close()
+    await db_store.commit()
+
+    return {"result": "ok", "msg": f"Secret: {name} deleted"}
+
+
 async def value(db_store: DbStore, name: str, value: str) -> dict[str, Any]:
+    """Get or set a secret value by name.
+
+    Args:
+        db_store: Database store instance used to access the
+            connection.
+        name: Secret name to look up.
+        value: New secret value to store, or ``None`` to read the
+            current value.
+
+    Returns:
+        A dictionary with the operation result, message, and value
+        when applicable.
+    """
     curs = await db_store.conn.execute(
         "SELECT value FROM secret WHERE name = :name", {"name": name}
     )

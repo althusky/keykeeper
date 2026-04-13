@@ -165,7 +165,7 @@ async def secret_user(
 
 
 async def remove(db_store, name: str):
-    """Remove a user and related secrets from the database.
+    """Remove a user and it relations to secrets from the database.
 
     Args:
         db_store: Database store object with an active connection.
@@ -193,6 +193,7 @@ async def remove(db_store, name: str):
         "DELETE FROM user WHERE id = :id_user", {"id_user": id_user}
     )
     await curs.close()
+    await db_store.commit()
 
     return {"result": "ok", "msg": f"User: {name} deleted"}
 
@@ -272,6 +273,14 @@ async def unlock(db_store: DbStore, name: str) -> dict[str, Any]:
 async def key(
     db_store: DbStore, name: str, change: bool = False
 ) -> dict[str, Any]:
+    """Get or rotate a user's API key.
+    Args:
+        db_store: Database store used to access the user table.
+        name: User name whose key should be retrieved or changed.
+        change: If True, generate and store a new key for the user.
+    Returns:
+        A dictionary with the operation result.
+    """
     curs = await db_store.conn.execute(
         "SELECT key FROM user WHERE name = :name", {"name": name}
     )

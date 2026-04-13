@@ -64,6 +64,31 @@ def edit(
         click.secho(response["result"], fg="red")
 
 
+@secret.command("remove", short_help="Delete secret")
+@click.argument("name", type=str)
+@click.option("--yes", is_flag=True, help="Delete without confirmation")
+def remove(name: str, yes: bool = False):
+    """
+    NAME - secret name
+    \f
+    """
+    if not yes:
+        click.secho(f"Secret: {name} will be deleted!!", fg="red")
+        if not click.confirm("Continue ?", abort=False, show_default=False):
+            click.secho(f"Deletion of secret: {name} canceled.", fg="green")
+            return
+    response = ipc_request(
+        {
+            "secret": "remove",
+            "name": name,
+        }
+    )
+    if response["result"] == "ok":
+        click.secho(response["msg"], fg="green")
+    else:
+        click.secho(response["result"], fg="red")
+
+
 @secret.command("value", short_help="Blocks the user")
 @click.argument("name", type=str)
 @click.argument("value", type=str, default=None, required=False)
