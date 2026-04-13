@@ -63,6 +63,8 @@ async def ipc_manager(
                 request["readonly"],
                 request["create"],
             )
+        case {"secret": value} if value == "remove":
+            return await secrets.remove(db_store, request["name"])
         case {"secret": value} if value == "value":
             return await secrets.value(
                 db_store, request["name"], request.get("value", None)
