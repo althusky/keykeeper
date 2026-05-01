@@ -89,4 +89,5 @@ docker exec keykeeper_container keykeeper user secret user_name add secret_name
 * `make run` - Starts the server 
 * `make stop` - Stops the server
 * `make connect` - Connects to a running server in terminal mode and allows you to manage the server via the keykeeper command
-* `make test` - Runs tests
+* `make test` - Run quick unit tests
+* `make all-test` - Run the full test suite
