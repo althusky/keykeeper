@@ -3,7 +3,7 @@ import pytest
 from keykeeper.server_pack import ipc_manager
 from keykeeper.server_pack.db import DbStore
 
-from .conftest import DATABASE_KEY
+from ..conftest import DATABASE_KEY
 
 
 @pytest.mark.asyncio
@@ -44,6 +44,6 @@ async def test_secret_lock(tmp_path):
     assert response == {"result": "The secret: lock has already been locked"}
 
     response = await ipc_manager(db_store, {"secret": "lock", "name": "active"})
-    assert response == {"result": "ok", "msg": "Secret: active has been blocked."}
+    assert response == {"result": "ok", "msg": "Secret: active has been locked."}
 
     await db_store.close()

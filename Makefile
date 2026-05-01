@@ -30,9 +30,19 @@ stop:
 terminal:
 	make run
 	- docker exec -it $(DOCKER_CONTAINER) /bin/bash
-	docker container stop $(DOCKER_CONTAINER)
+	make stop
+
+pipe:
+	make run
+	sleep 1
+	- cat test/dump.json | docker exec -i $(DOCKER_CONTAINER) keykeeper backup load
+	make stop
 
 
 test:
+	pytest -s -m "not performance and not docker"
+	echo -e "\a"
+
+all-test:
 	pytest -s
 	echo -e "\a"

@@ -135,7 +135,7 @@ async def secret_user(
     # add check unique
     if action == "add":
         if keys_enable:
-            return {"result": "User secret already connected"}
+            return {"result": "The user and secret are already linked"}
         curs = await db_store.conn.execute(
             "INSERT INTO user_secret "
             "(id_user, id_secret) VALUES (:id_user, :id_secret);",
@@ -159,7 +159,10 @@ async def secret_user(
         )
         await curs.close()
         await db_store.commit()
-        return {"result": "ok"}
+        return {
+            "result": "ok",
+            "msg": f"Delete secret: {secret_name} from user: {name}",
+        }
 
     return {"result": "Unknown action"}
 

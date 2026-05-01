@@ -106,7 +106,7 @@ def value(name: str, value: None | str = None):
 
     if response["result"] == "ok":
         click.secho(response["msg"], fg="green", nl=False)
-        click.secho(f": {response['value']}", fg="yellow")
+        click.secho(f": `{response['value']}`", fg="yellow")
     else:
         click.secho(response["result"], fg="red")
 

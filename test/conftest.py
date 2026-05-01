@@ -1,5 +1,8 @@
 import http.client
+import io
+import time
 import logging
+import tarfile
 import time
 from pathlib import Path
 
@@ -10,6 +13,9 @@ DOCKER_IMAGE = "keykeeper_image_test"
 DOCKER_CONTAINER = "keykeeper_container_test"
 
 DATABASE_KEY = "4NHH7D3+0AoSPXb2I6byPg=="
+USER_1_KEY = "4tXQmR1poRmJiiGZTVwBbeFy3vQ7gTiw967I4ixcJ6Y="
+USER_2_KEY = "VbO3ekumi2oQpLIGi36wzmHLvy27gG6D+zBUoZJkHoE="
+
 
 PATH = Path.cwd()
 
@@ -20,7 +26,7 @@ logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("aiosqlite").setLevel(logging.WARNING)
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="module")
 def docker_container():
 
     logging.info(f"Start build docker image: {DOCKER_IMAGE}")
@@ -56,7 +62,7 @@ def docker_container():
 
     logging.info("Server start")
     while True:
-        time.sleep(1)
+        time.sleep(0.5)
         try:
             conn = http.client.HTTPConnection("localhost", PORT, timeout=1)
             conn.request("GET", "/")
@@ -69,10 +75,12 @@ def docker_container():
         except (ConnectionResetError, ConnectionRefusedError):
             logging.warning("Waiting server ...")
 
-    # part of the keykeeper serverkey activate <key>
-    container.exec_run(
-        f"keykeeper serverkey activate {DATABASE_KEY}", stream=True
-    )
+    data = io.BytesIO()
+    with tarfile.open(fileobj=data, mode="w") as tar:
+        tar.add("test/dump.json", arcname="dump.json")
+    data.seek(0)
+
+    container.put_archive(path="/app", data=data)
 
     yield container
 
@@ -81,8 +89,41 @@ def docker_container():
     container.remove()
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="module")
+def prepare_data(docker_container):
+
+    docker_container.exec_run(
+        f"keykeeper serverkey activate {DATABASE_KEY}", stream=True
+    )
+    docker_container.exec_run(
+        ["sh", "-c", "cat /app/dump.json | keykeeper backup load"], stream=True
+    )
+
+    step = 10
+    output = ""
+
+    # Waiting for asynchronous data loading
+    while USER_2_KEY not in output and step:
+        res = docker_container.exec_run(
+            "keykeeper user key web_user_2", stream=True
+        )
+        output = "\n".join(map(lambda x: x.decode(), res.output))
+        if USER_2_KEY in output:
+            break
+        time.sleep(0.01)
+        step -= 1
+        if not step:
+            raise ConnectionError()
+
+
+@pytest.fixture(scope="module")
 def server_data(docker_container):
+
+    # part of the keykeeper serverkey activate <key>
+    docker_container.exec_run(
+        f"keykeeper serverkey activate {DATABASE_KEY}", stream=True
+    )
+
     # users
     response = docker_container.exec_run(
         "keykeeper user edit web_user_1 -ac",

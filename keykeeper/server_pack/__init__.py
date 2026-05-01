@@ -1,6 +1,7 @@
 import logging
 from typing import Any, Tuple
 
+import keykeeper.server_pack.backup as backup
 import keykeeper.server_pack.secrets as secrets
 import keykeeper.server_pack.users as users
 from keykeeper.keykeeper_protocol import BaseProtocol, ProtocolBrokenError
@@ -75,6 +76,11 @@ async def ipc_manager(
             return await secrets.unlock(db_store, request["name"])
         case {"secret": value} if value == "ls":
             return await secrets.ls(db_store)
+
+        case {"backup": value} if value == "dump":
+            return await backup.dump(db_store)
+        case {"backup": value} if value == "load":
+            return await backup.load(db_store, request["dump"])
 
     return {"result": "Unknown command"}
 

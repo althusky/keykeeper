@@ -12,7 +12,7 @@ from .conftest import DATABASE_KEY
 USER_COUNT = 500
 
 
-@pytest.mark.skip(reason="Long test, use for performance testing only")
+@pytest.mark.performance
 @pytest.mark.asyncio
 async def test_performance_search(tmp_path):
 

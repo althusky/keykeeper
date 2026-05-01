@@ -186,7 +186,7 @@ async def lock(db_store: DbStore, name: str) -> dict[str, Any]:
     await curs.close()
     await db_store.commit()
 
-    return {"result": "ok", "msg": f"Secret: {name} has been blocked."}
+    return {"result": "ok", "msg": f"Secret: {name} has been locked."}
 
 
 async def unlock(db_store: DbStore, name: str) -> dict[str, Any]:

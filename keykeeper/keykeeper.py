@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import click
 
+from keykeeper.keykeeper_pack.backup import backup
 from keykeeper.keykeeper_pack.secrets import secret
 from keykeeper.keykeeper_pack.server import serverkey
 from keykeeper.keykeeper_pack.users import user
@@ -19,6 +20,7 @@ def cli():
 cli.add_command(user)
 cli.add_command(secret)
 cli.add_command(serverkey)
+cli.add_command(backup)
 
 if __name__ == "__main__":
     cli()
