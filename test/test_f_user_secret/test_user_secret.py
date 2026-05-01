@@ -3,7 +3,7 @@ import pytest
 from keykeeper.server_pack import ipc_manager
 from keykeeper.server_pack.db import DbStore
 
-from .conftest import DATABASE_KEY
+from ..conftest import DATABASE_KEY
 
 
 @pytest.fixture(scope="function")
@@ -102,7 +102,7 @@ async def test_add(prepare_db):
             "secret_name": "secret_1",
         },
     )
-    assert response["result"] == "User secret already connected"
+    assert response["result"] == "The user and secret are already linked"
 
 
 @pytest.mark.asyncio

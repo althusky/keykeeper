@@ -1,0 +1,70 @@
+  {
+  "user": [
+    {
+      "id": 1,
+      "name": "web_user_1",
+      "key": "4tXQmR1poRmJiiGZTVwBbeFy3vQ7gTiw967I4ixcJ6Y=",
+      "descr": "",
+      "active": 1
+    },
+    {
+      "id": 2,
+      "name": "web_user_2",
+      "key": "VbO3ekumi2oQpLIGi36wzmHLvy27gG6D+zBUoZJkHoE=",
+      "descr": "",
+      "active": 1
+    }
+  ],
+  "secret": [
+    {
+      "id": 1,
+      "name": "web_secret_1",
+      "value": "value_1",
+      "descr": "",
+      "active": 1,
+      "readonly": 1
+    },
+    {
+      "id": 2,
+      "name": "web_secret_2",
+      "value": "value_2",
+      "descr": "",
+      "active": 1,
+      "readonly": 1
+    },
+    {
+      "id": 3,
+      "name": "web_secret_3",
+      "value": "value_3",
+      "descr": "",
+      "active": 1,
+      "readonly": 0
+    },
+    {
+      "id": 4,
+      "name": "web_secret_4",
+      "value": "value_4",
+      "descr": "",
+      "active": 0,
+      "readonly": 0
+    }
+  ],
+  "user_secret": [
+    {
+      "id_user": 1,
+      "id_secret": 2
+    },
+    {
+      "id_user": 2,
+      "id_secret": 1
+    },
+    {
+      "id_user": 2,
+      "id_secret": 3
+    },
+    {
+      "id_user": 2,
+      "id_secret": 4
+    }
+  ]
+}

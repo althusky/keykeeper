@@ -3,7 +3,7 @@ import pytest
 from keykeeper.server_pack import ipc_manager
 from keykeeper.server_pack.db import DbStore
 
-from .conftest import DATABASE_KEY
+from ..conftest import DATABASE_KEY
 
 
 @pytest.mark.asyncio

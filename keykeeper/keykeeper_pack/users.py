@@ -47,7 +47,8 @@ def edit(name: str, descr: str, create: bool, active: bool):
     )
     if response["result"] == "ok":
         click.secho(response["msg"], fg="green")
-        click.secho(f"User key: {response['key']}", fg="red")
+        if "key" in response:
+            click.secho(f"User key: {response['key']}", fg="red")
     else:
         click.secho(response["result"], fg="red")
 
@@ -113,6 +114,7 @@ def secret(name: str, action: str, secret_name: None | str = None):
             else:
                 click.secho("|    |", fg="red", nl=False)
             click.echo(f" {line[3]}")
+        return
 
     elif response["result"] == "ok":
         click.secho(response["msg"], fg="green")

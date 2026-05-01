@@ -4,7 +4,7 @@ from keykeeper.keykeeper_protocol import BaseProtocol
 from keykeeper.server_pack import find_user, ipc_manager
 from keykeeper.server_pack.db import DbStore
 
-from .conftest import DATABASE_KEY
+from ..conftest import DATABASE_KEY
 
 
 @pytest.mark.asyncio
